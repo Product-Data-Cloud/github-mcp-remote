@@ -1,9 +1,10 @@
+import asyncio
+import logging
+import os
 from fastmcp import FastMCP
 from github import Github, GithubException
-import os
 import base64
 from typing import Dict
-import logging
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -58,3 +59,14 @@ def connection_status():
         return {"success": True, "username": user.login}
     except Exception as e:
         return {"success": False, "error": str(e)}
+
+if __name__ == "__main__":
+    port = int(os.getenv("PORT", 8080))
+    logger.info(f"Starting GitHub MCP server on port {port}")
+    asyncio.run(
+        mcp.run_async(
+            transport="streamable-http",
+            host="0.0.0.0",
+            port=port,
+        )
+    )
