@@ -1,0 +1,9 @@
+[project]
+name = "github-mcp-remote"
+version = "1.0.0"
+requires-python = ">=3.12"
+dependencies = [
+    "fastmcp>=0.2.0",
+    "PyGithub>=2.1.1",
+    "uvicorn>=0.27.0"
+]

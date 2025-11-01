@@ -1,0 +1,10 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io//github-mcp:', '.']
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io//github-mcp:']
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args: ['run', 'deploy', 'github-mcp', '--image', 'gcr.io//github-mcp:', '--region', 'europe-west1', '--platform', 'managed', '--allow-unauthenticated', '--update-secrets', 'GITHUB_TOKEN=github-token:latest']
+images: ['gcr.io//github-mcp:']
+timeout: '900s'
