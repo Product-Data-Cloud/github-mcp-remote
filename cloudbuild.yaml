@@ -1,10 +1,42 @@
 steps:
+  # Build Docker image
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io//github-mcp:', '.']
+    args: 
+      - 'build'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/github-mcp:$SHORT_SHA'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/github-mcp:latest'
+      - '.'
+  
+  # Push Docker image with both tags
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io//github-mcp:']
+    args: ['push', 'gcr.io/$PROJECT_ID/github-mcp:$SHORT_SHA']
+  
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/github-mcp:latest']
+  
+  # Deploy to Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
-    args: ['run', 'deploy', 'github-mcp', '--image', 'gcr.io//github-mcp:', '--region', 'europe-west1', '--platform', 'managed', '--allow-unauthenticated', '--update-secrets', 'GITHUB_TOKEN=github-token:latest']
-images: ['gcr.io//github-mcp:']
+    args:
+      - 'run'
+      - 'deploy'
+      - 'github-mcp'
+      - '--image'
+      - 'gcr.io/$PROJECT_ID/github-mcp:$SHORT_SHA'
+      - '--region'
+      - 'europe-west1'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'
+      - '--update-secrets'
+      - 'GITHUB_TOKEN=github-token:latest'
+
+# Store images in Container Registry
+images:
+  - 'gcr.io/$PROJECT_ID/github-mcp:$SHORT_SHA'
+  - 'gcr.io/$PROJECT_ID/github-mcp:latest'
+
+# Build timeout
 timeout: '900s'
