@@ -38,5 +38,9 @@ images:
   - 'gcr.io/$PROJECT_ID/github-mcp:$SHORT_SHA'
   - 'gcr.io/$PROJECT_ID/github-mcp:latest'
 
+# Build options
+options:
+  logging: CLOUD_LOGGING_ONLY
+
 # Build timeout
 timeout: '900s'
