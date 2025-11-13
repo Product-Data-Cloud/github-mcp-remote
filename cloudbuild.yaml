@@ -16,7 +16,7 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'gcr.io/$PROJECT_ID/github-mcp:latest']
   
-  # Deploy to Cloud Run
+  # Deploy to Cloud Run with V3.0 Production Resource Limits
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
     args:
@@ -32,6 +32,19 @@ steps:
       - '--allow-unauthenticated'
       - '--update-secrets'
       - 'GITHUB_TOKEN=github-token:latest'
+      # 🚀 V3.0 PRODUCTION RESOURCE LIMITS
+      - '--memory'
+      - '2Gi'
+      - '--cpu'
+      - '2'
+      - '--min-instances'
+      - '1'
+      - '--max-instances'
+      - '10'
+      - '--concurrency'
+      - '80'
+      - '--timeout'
+      - '300s'
 
 # Store images in Container Registry
 images:
